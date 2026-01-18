@@ -637,3 +637,30 @@ body {
 .page-btn:disabled {
   opacity: 0.4;
 }
+
+
+.keyboard {
+  margin-top: 12px;
+}
+
+.key-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.key {
+  width: 36px;
+  height: 44px;
+  border-radius: 8px;
+  border: none;
+  background: #222;
+  color: #fff;
+  font-size: 16px;
+}
+
+.key-wide {
+  width: 64px;
+  background: #444;
+}
