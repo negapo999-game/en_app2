@@ -35,6 +35,8 @@ let quizCount = 10
 let allWords = []       // 全単語
 let currentPage = 1;
 const WORDS_PER_PAGE = 100
+let currentAnswer = ""
+
 
 
 // 初期化
@@ -44,11 +46,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   initRangeButtons()
   updateWrongCount()
 
-  document.getElementById("quiz-input").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      checkAnswer()
-    }
-  })
+  // document.getElementById("quiz-input").addEventListener("keypress", (e) => {
+  //   if (e.key === "Enter") {
+  //     checkAnswer()
+  //   }
+  // })
 })
 
 async function loadWords() {
@@ -143,8 +145,8 @@ function showQuestion() {
 
   const word = quizWords[currentIndex]
   document.getElementById("quiz-question").textContent = word.jp
-  document.getElementById("quiz-input").value = ""
-  document.getElementById("quiz-input").focus()
+  // document.getElementById("quiz-input").value = ""
+  // document.getElementById("quiz-input").focus()
   document.getElementById("quiz-current").textContent = currentIndex + 1
   document.getElementById("quiz-total").textContent = quizWords.length
   document.getElementById("quiz-score").textContent = score
@@ -158,6 +160,40 @@ function showQuestion() {
   // フィードバック非表示
   document.querySelector(".quiz-content").classList.remove("hidden")
   document.getElementById("quiz-feedback").classList.remove("show")
+  
+  currentAnswer = ""
+  renderAnswerSlots(word.en.length)
+  updateAnswerDisplay()
+}
+
+
+
+document.getElementById("keyboard").addEventListener("click", (e) => {
+  if (!e.target.classList.contains("key")) return
+
+  const action = e.target.dataset.action
+  const char = e.target.textContent
+  const answerLength = quizWords[currentIndex].en.length
+
+  if (action === "delete") {
+    currentAnswer = currentAnswer.slice(0, -1)
+  } else if (action === "enter") {
+    checkAnswer()
+    return
+  } else {
+    if (currentAnswer.length < answerLength) {
+      currentAnswer += char
+    }
+  }
+
+  updateAnswerDisplay()
+})
+
+function updateAnswerDisplay() {
+  const chars = document.querySelectorAll(".answer-char")
+  chars.forEach((span, i) => {
+    span.textContent = currentAnswer[i] || ""
+  })
 }
 
 function renderAnswerSlots(length) {
@@ -172,41 +208,40 @@ function renderAnswerSlots(length) {
   }
 }
 
-document.getElementById("quiz-input").addEventListener("input", () => {
-  const inputValue = document.getElementById("quiz-input").value
-  const chars = document.querySelectorAll(".answer-char")
+// document.getElementById("quiz-input").addEventListener("input", () => {
+//   const inputValue = document.getElementById("quiz-input").value
+//   const chars = document.querySelectorAll(".answer-char")
 
-  chars.forEach((span, i) => {
-    span.textContent = inputValue[i]
-      ? inputValue[i].toUpperCase()
-      : ""
-  })
-})
+//   chars.forEach((span, i) => {
+//   span.textContent = inputValue[i]
+//     ? inputValue[i].toLowerCase()
+//     : ""
+//   })  
+// })
 
-document.body.addEventListener("click", () => {
-  document.getElementById("quiz-input").focus()
-})
+// document.body.addEventListener("click", () => {
+//   document.getElementById("quiz-input").focus()
+// })
 
-function checkAnswer() {
-  const input = document.getElementById("quiz-input").value.trim().toLowerCase()
-  const word = quizWords[currentIndex]
+// function checkAnswer() {
+//   // const input = document.getElementById("quiz-input").value.trim().toLowerCase()
+//   const word = quizWords[currentIndex]
 
-  const isCorrect = input === word.en.toLowerCase()
+//   const isCorrect = input === word.en.toLowerCase()
 
-  if (isCorrect) {
-    score++
-  } else {
-    wrongWords.push(word)
-  }
+//   if (isCorrect) {
+//     score++
+//   } else {
+//     wrongWords.push(word)
+//   }
 
-  showFeedback(isCorrect, word)
-}
+//   showFeedback(isCorrect, word)
+// }
 
 // 回答チェック
 function checkAnswer() {
-  const input = document.getElementById("quiz-input").value.trim().toLowerCase()
   const word = quizWords[currentIndex]
-  const isCorrect = input === word.en.toLowerCase()
+  const isCorrect = currentAnswer === word.en.toLowerCase()
 
   if (isCorrect) {
     score++
@@ -214,9 +249,9 @@ function checkAnswer() {
     wrongWords.push(word)
   }
 
-  // フィードバック表示
   showFeedback(isCorrect, word)
 }
+
 
 // フィードバック表示
 function showFeedback(isCorrect, word) {
