@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabu - 高校英単語学習アプリ</title>
+  <link rel="stylesheet" href="title-screen.css">
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <!-- ロゴ・タイトル -->
+      <div class="header">
+        <div class="logo-wrapper">
+          <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 7v14"/>
+            <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>
+          </svg>
+        </div>
+        <h1 class="title">Vocabu</h1>
+        <p class="subtitle">高校英単語をマスターしよう</p>
+      </div>
+
+      <!-- メインボタン -->
+      <div class="buttons">
+        <button class="btn btn-primary">
+          <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="6 3 20 12 6 21 6 3"/>
+          </svg>
+          学習をはじめる
+        </button>
+
+        <div class="btn-grid">
+          <button class="btn btn-secondary">
+            <svg class="btn-icon-small" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" x2="21" y1="6" y2="6"/>
+              <line x1="8" x2="21" y1="12" y2="12"/>
+              <line x1="8" x2="21" y1="18" y2="18"/>
+              <line x1="3" x2="3.01" y1="6" y2="6"/>
+              <line x1="3" x2="3.01" y1="12" y2="12"/>
+              <line x1="3" x2="3.01" y1="18" y2="18"/>
+            </svg>
+            <span class="btn-label">単語一覧</span>
+          </button>
+          <button class="btn btn-secondary btn-with-badge">
+            <svg class="btn-icon-small" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" x2="12" y1="8" y2="12"/>
+              <line x1="12" x2="12.01" y1="16" y2="16"/>
+            </svg>
+            <span class="btn-label">間違えた単語</span>
+            <span class="badge">5</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 統計 -->
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-value stat-primary">1,000</div>
+          <div class="stat-label">収録単語</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-value stat-accent">
+            <svg class="sparkle-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+            </svg>
+            10
+          </div>
+          <div class="stat-label">出題範囲</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
