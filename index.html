@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英単語学習アプリ</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+</head>
+<body>
+  <main class="container">
+    <!-- タイトル画面 -->
+    <div id="title-screen" class="screen active">
+      <div class="card title-card">
+        <div class="icon-circle">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+          </svg>
+        </div>
+        <h1 class="title">英単語マスター</h1>
+        <p class="subtitle">高校英語 重要単語1000</p>
+        
+        <button class="btn btn-primary btn-large" onclick="showScreen('range-select')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="6 3 20 12 6 21 6 3"/>
+          </svg>
+          学習を始める
+        </button>
+        
+        <div class="button-row">
+          <button class="btn btn-secondary btn-icon" onclick="showScreen('word-list')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            <span>単語一覧</span>
+          </button>
+          <button class="btn btn-secondary btn-icon" onclick="showScreen('wrong-list')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span>間違えた単語 <span id="wrong-count" class="badge">0</span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 範囲選択画面 -->
+    <div id="range-select" class="screen">
+      <div class="card">
+        <div class="card-header">
+          <button class="btn btn-ghost btn-back" onclick="showScreen('title-screen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h2 class="card-title">出題範囲を選択</h2>
+        </div>
+        <div class="range-grid" id="range-buttons"></div>
+      </div>
+    </div>
+
+    <!-- モード選択画面 -->
+    <div id="mode-select" class="screen">
+      <div class="card">
+        <div class="card-header">
+          <button class="btn btn-ghost btn-back" onclick="showScreen('range-select')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h2 class="card-title">出題数を選択</h2>
+        </div>
+        <p class="range-info" id="selected-range-info"></p>
+        <div class="mode-grid">
+          <button class="btn btn-mode" onclick="startQuiz(10)">
+            <span class="mode-count">10</span>
+            <span class="mode-label">問</span>
+          </button>
+          <button class="btn btn-mode" onclick="startQuiz(20)">
+            <span class="mode-count">20</span>
+            <span class="mode-label">問</span>
+          </button>
+          <button class="btn btn-mode" onclick="startQuiz(50)">
+            <span class="mode-count">50</span>
+            <span class="mode-label">問</span>
+          </button>
+          <button class="btn btn-mode" onclick="startQuiz(100)">
+            <span class="mode-count">100</span>
+            <span class="mode-label">問</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- クイズ画面 -->
+    <div id="quiz-screen" class="screen">
+      <div class="card quiz-card">
+        <div class="card-header">
+          <button class="btn btn-ghost btn-back" onclick="confirmExit()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <div class="quiz-progress">
+            <span id="quiz-current">1</span> / <span id="quiz-total">10</span>
+          </div>
+          <div class="quiz-score">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            <span id="quiz-score">0</span>
+          </div>
+        </div>
+        
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <div class="quiz-content">
+          <p class="quiz-question" id="quiz-question">問題</p>
+<!-- クイズ画面内 -->
+        <div id="answer-display" class="answer-display"></div>
+        <div id="keyboard" class="keyboard">
+          <div class="key-row">
+            <button class="key">q</button><button class="key">w</button><button class="key">e</button>
+            <button class="key">r</button><button class="key">t</button><button class="key">y</button>
+            <button class="key">u</button><button class="key">i</button><button class="key">o</button>
+            <button class="key">p</button>
+          </div>
+
+          <div class="key-row">
+            <button class="key">a</button><button class="key">s</button><button class="key">d</button>
+            <button class="key">f</button><button class="key">g</button><button class="key">h</button>
+            <button class="key">j</button><button class="key">k</button><button class="key">l</button>
+          </div>
+
+          <div class="key-row">
+            <button class="key">z</button><button class="key">x</button><button class="key">c</button>
+            <button class="key">v</button><button class="key">b</button><button class="key">n</button>
+            <button class="key">m</button>
+            <button class="key key-wide" data-action="delete">⌫</button>
+          </div>
+        </div>
+        <!-- <input
+          id="quiz-input"
+          type="text"
+          inputmode="latin"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+        /> -->
+          <div class="quiz-actions">
+            <button class="btn btn-primary" id="answer-btn" onclick="checkAnswer()">回答する</button>
+          </div>
+        </div>
+        
+        <div class="quiz-feedback" id="quiz-feedback">
+          <div class="feedback-icon" id="feedback-icon"></div>
+          <p class="feedback-text" id="feedback-text"></p>
+          <p class="feedback-answer" id="feedback-answer"></p>
+          <button class="btn btn-primary" onclick="nextQuestion()">次の問題</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="result-screen" class="screen">
+      <div class="card result-card">
+        <div class="result-header">
+          <div class="result-circle" id="result-circle">
+            <span class="result-percent" id="result-percent">0%</span>
+          </div>
+          <h2 class="result-title">クイズ完了!</h2>
+          <p class="result-score"><span id="result-correct">0</span> / <span id="result-total">10</span> 問正解</p>
+        </div>
+        
+        <div class="result-actions">
+          <button class="btn btn-primary" onclick="retryQuiz()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+              <path d="M16 16h5v5"/>
+            </svg>
+            もう一度
+          </button>
+          <button class="btn btn-secondary" id="retry-wrong-btn" onclick="retryWrongWords()" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            間違えた単語を復習
+          </button>
+          <button class="btn btn-ghost" onclick="showScreen('title-screen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            ホームに戻る
+          </button>
+        </div>
+        
+        <div class="wrong-words-section" id="wrong-words-section" style="display: none;">
+          <h3>間違えた単語</h3>
+          <div class="wrong-words-list" id="result-wrong-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 単語一覧画面 -->
+    <div id="word-list" class="screen">
+      <div class="card list-card">
+        <div class="card-header">
+          <button class="btn btn-ghost btn-back" onclick="showScreen('title-screen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h2 class="card-title">単語一覧</h2>
+        </div>
+        
+        <div class="search-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="text" id="search-input" placeholder="単語を検索..." oninput="filterWords()">
+        </div>
+        
+        <!-- ページネーション -->
+        <div class="pagination">
+          <button id="prev-page" class="page-btn">前へ</button>
+          <span id="page-info"></span>
+          <button id="next-page" class="page-btn">次へ</button>
+        </div>
+        <div class="words-container" id="words-container"></div>
+      </div>
+    </div>
+
+    <!-- 間違えた単語画面 -->
+    <div id="wrong-list" class="screen">
+      <div class="card list-card">
+        <div class="card-header">
+          <button class="btn btn-ghost btn-back" onclick="showScreen('title-screen')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          <h2 class="card-title">間違えた単語</h2>
+        </div>
+        
+        <div id="wrong-list-content">
+          <div class="empty-state" id="wrong-empty">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            <p>間違えた単語はありません</p>
+          </div>
+          <div class="wrong-words-container" id="wrong-words-container"></div>
+          <button class="btn btn-primary" id="practice-wrong-btn" onclick="practiceWrongWords()" style="display: none;">
+            間違えた単語を練習
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js");
+      });
+    }
+  </script>
+</body>
+</html>
