@@ -242,6 +242,7 @@ function renderAnswerSlots(length) {
 function checkAnswer() {
   const word = quizWords[currentIndex]
   const isCorrect = currentAnswer === word.en.toLowerCase()
+  lastUserAnswer = currentAnswer
 
   if (isCorrect) {
     score++
@@ -266,7 +267,8 @@ function showFeedback(isCorrect, word) {
     : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>'
 
   document.getElementById("feedback-text").textContent = isCorrect ? "正解!" : "不正解..."
-  document.getElementById("feedback-answer").innerHTML = `正解: <strong>${word.en}</strong>`
+  document.getElementById("feedback-answer").innerHTML = `
+  あなたの回答: <strong>${lastUserAnswer || "（未入力）"}</strong><br>正解: <strong>${word.en}</strong>`
   document.getElementById("quiz-score").textContent = score
 }
 
