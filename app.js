@@ -1,6 +1,6 @@
 // 単語データ
 let WORDS = [];
-
+ 
 // 出題範囲
 const WORD_RANGES = [
   { label: "1〜100", start: 1, end: 100 },
