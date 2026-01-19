@@ -268,7 +268,8 @@ function showFeedback(isCorrect, word) {
 
   document.getElementById("feedback-text").textContent = isCorrect ? "正解!" : "不正解..."
   document.getElementById("feedback-answer").innerHTML = `
-  あなたの回答: <strong>${lastUserAnswer || "（未入力）"}</strong><br>正解: <strong>${word.en}</strong>`
+  あなたの回答: <strong>${lastUserAnswer || "（未入力）"}</strong><br>正解: <strong>${word.en}</strong><br>
+    意味: <strong>${word.jp}</strong>`
   document.getElementById("quiz-score").textContent = score
 }
 
